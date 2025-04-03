@@ -2359,10 +2359,6 @@ do
                 return Dropdown.Value and 1 or 0;
             end;
         end;
-
-        function Dropdown:Refresh()
-            Dropdown:BuildDropdownList()
-        end
         
         function Dropdown:AddValue(Value)
             if type(Value) ~= 'string' then return end
@@ -2518,6 +2514,19 @@ do
         function Dropdown:OnChanged(Func)
             Dropdown.Changed = Func;
             Func(Dropdown.Value);
+        end;
+
+        function Dropdown:Clear()
+            self.Values = {}
+            
+            if self.Multi then
+                self.Value = {}
+            else
+                self.Value = nil
+            end
+
+            self.ItemList.Text = "--"
+            self:BuildDropdownList()
         end;
 
         function Dropdown:SetValue(Val)
