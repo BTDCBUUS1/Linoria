@@ -2525,7 +2525,6 @@ do
                 self.Value = nil
             end
 
-            self.ItemList.Text = "--"
             self:BuildDropdownList()
         end;
 
@@ -3659,4 +3658,5 @@ Players.PlayerAdded:Connect(OnPlayerChange);
 Players.PlayerRemoving:Connect(OnPlayerChange);
 
 getgenv().Library = Library
+print("notTrue!")
 return Library
