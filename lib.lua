@@ -2978,13 +2978,13 @@ function Library:CreateWindow(...)
 
     if typeof(Config.Size) ~= 'UDim2' then
         if IsMobile then
+            Config.Center = true
             Config.Size = UDim2.fromOffset(300, 330)
         else
+            Config.Center = false
             Config.Size = UDim2.fromOffset(600, 660)
         end
     end
-
-    Config.Center = true
 
     if Config.Center then
         Config.AnchorPoint = Vector2.new(0.5, 0.5)
