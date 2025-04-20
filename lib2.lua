@@ -2989,7 +2989,7 @@ function Library:CreateWindow(...)
     
     if typeof(Config.Size) ~= 'UDim2' then
         if isMobile then
-            Config.Size = UDim2.fromScale(0.9, 0.7)
+            Config.Size = UDim2.fromScale(0.8, 0.6)
         else
             Config.Size = UDim2.fromOffset(550, 600)
         end
@@ -3035,10 +3035,13 @@ function Library:CreateWindow(...)
         BorderColor3 = 'AccentColor';
     });
 
+    local TitleHeight = isMobile and 20 or 25
+    
     local WindowLabel = Library:CreateLabel({
         Position = UDim2.new(0, 7, 0, 0);
-        Size = UDim2.new(0, 0, 0, 25);
+        Size = UDim2.new(0, 0, 0, TitleHeight);
         Text = Config.Title or '';
+        TextSize = isMobile and 14 or 16;
         TextXAlignment = Enum.TextXAlignment.Left;
         ZIndex = 1;
         Parent = Inner;
@@ -3046,9 +3049,10 @@ function Library:CreateWindow(...)
     
     if isMobile then
         local CloseButton = Library:Create('TextButton', {
-            Position = UDim2.new(1, -25, 0, 0),
-            Size = UDim2.new(0, 25, 0, 25),
+            Position = UDim2.new(1, -20, 0, 0),
+            Size = UDim2.new(0, 20, 0, 20),
             Text = "X",
+            TextSize = 14,
             TextColor3 = Color3.new(1, 1, 1),
             BackgroundTransparency = 1,
             ZIndex = 10,
@@ -3063,8 +3067,8 @@ function Library:CreateWindow(...)
     local MainSectionOuter = Library:Create('Frame', {
         BackgroundColor3 = Library.BackgroundColor;
         BorderColor3 = Library.OutlineColor;
-        Position = UDim2.new(0, 8, 0, 25);
-        Size = UDim2.new(1, -16, 1, -33);
+        Position = UDim2.new(0, 8, 0, TitleHeight);
+        Size = UDim2.new(1, -16, 1, -(TitleHeight + 8));
         ZIndex = 1;
         Parent = Inner;
     });
@@ -3088,10 +3092,12 @@ function Library:CreateWindow(...)
         BackgroundColor3 = 'BackgroundColor';
     });
 
+    local TabAreaHeight = isMobile and 18 or 21
+    
     local TabArea = Library:Create('Frame', {
         BackgroundTransparency = 1;
         Position = UDim2.new(0, 8, 0, 8);
-        Size = UDim2.new(1, -16, 0, 21);
+        Size = UDim2.new(1, -16, 0, TabAreaHeight);
         ZIndex = 1;
         Parent = MainSectionInner;
     });
@@ -3102,7 +3108,7 @@ function Library:CreateWindow(...)
         local ScrollingTabArea = Library:Create('ScrollingFrame', {
             BackgroundTransparency = 1,
             Size = UDim2.new(1, 0, 1, 0),
-            CanvasSize = UDim2.new(0, 0, 0, 21),
+            CanvasSize = UDim2.new(0, 0, 0, TabAreaHeight),
             ScrollBarThickness = 0,
             ScrollingDirection = Enum.ScrollingDirection.X,
             BorderSizePixel = 0,
@@ -3118,7 +3124,7 @@ function Library:CreateWindow(...)
         });
         
         TabListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-            ScrollingTabArea.CanvasSize = UDim2.new(0, TabListLayout.AbsoluteContentSize.X, 0, 21)
+            ScrollingTabArea.CanvasSize = UDim2.new(0, TabListLayout.AbsoluteContentSize.X, 0, TabAreaHeight)
         end)
     else
         local TabListLayout = Library:Create('UIListLayout', {
@@ -3132,8 +3138,8 @@ function Library:CreateWindow(...)
     local TabContainer = Library:Create('Frame', {
         BackgroundColor3 = Library.MainColor;
         BorderColor3 = Library.OutlineColor;
-        Position = UDim2.new(0, 8, 0, 30);
-        Size = UDim2.new(1, -16, 1, -38);
+        Position = UDim2.new(0, 8, 0, 8 + TabAreaHeight);
+        Size = UDim2.new(1, -16, 1, -(16 + TabAreaHeight));
         ZIndex = 2;
         Parent = MainSectionInner;
     });
@@ -3153,13 +3159,13 @@ function Library:CreateWindow(...)
             Tabboxes = {};
         };
 
-        local TabButtonWidth = Library:GetTextBounds(Name, Library.Font, 16);
+        local TabButtonWidth = Library:GetTextBounds(Name, Library.Font, isMobile and 14 or 16);
         local TabButtonContainer = isMobile and TabArea:FindFirstChildOfClass('ScrollingFrame') or TabArea;
 
         local TabButton = Library:Create('Frame', {
             BackgroundColor3 = Library.BackgroundColor;
             BorderColor3 = Library.OutlineColor;
-            Size = UDim2.new(0, TabButtonWidth + 8 + 4, 1, 0);
+            Size = UDim2.new(0, TabButtonWidth + (isMobile and 8 or 12), 1, 0);
             ZIndex = 1;
             Parent = TabButtonContainer;
         });
@@ -3173,6 +3179,7 @@ function Library:CreateWindow(...)
             Position = UDim2.new(0, 0, 0, 0);
             Size = UDim2.new(1, 0, 1, -1);
             Text = Name;
+            TextSize = isMobile and 12 or 14;
             ZIndex = 1;
             Parent = TabButton;
         });
@@ -3333,11 +3340,13 @@ function Library:CreateWindow(...)
         function Tab:AddGroupbox(Info)
             local Groupbox = {};
 
+            local groupboxHeight = isMobile and 300 or 507 + 2
+            
             local BoxOuter = Library:Create('Frame', {
                 BackgroundColor3 = Library.BackgroundColor;
                 BorderColor3 = Library.OutlineColor;
                 BorderMode = Enum.BorderMode.Inset;
-                Size = isMobile and UDim2.new(1, 0, 0, 507 + 2) or UDim2.new(1, 0, 0, 507 + 2);
+                Size = UDim2.new(1, 0, 0, groupboxHeight);
                 ZIndex = 2;
                 Parent = Info.Side == 1 and LeftSide or RightSide;
             });
@@ -3372,10 +3381,12 @@ function Library:CreateWindow(...)
                 BackgroundColor3 = 'AccentColor';
             });
 
+            local labelSize = isMobile and 16 or 18
+            
             local GroupboxLabel = Library:CreateLabel({
-                Size = UDim2.new(1, 0, 0, 18);
+                Size = UDim2.new(1, 0, 0, labelSize);
                 Position = UDim2.new(0, 4, 0, 2);
-                TextSize = 14;
+                TextSize = isMobile and 12 or 14;
                 Text = Info.Name;
                 TextXAlignment = Enum.TextXAlignment.Left;
                 ZIndex = 5;
@@ -3384,8 +3395,8 @@ function Library:CreateWindow(...)
 
             local Container = Library:Create('Frame', {
                 BackgroundTransparency = 1;
-                Position = UDim2.new(0, 4, 0, 20);
-                Size = UDim2.new(1, -4, 1, -20);
+                Position = UDim2.new(0, 4, 0, labelSize + 2);
+                Size = UDim2.new(1, -8, 1, -(labelSize + 2));
                 ZIndex = 1;
                 Parent = BoxInner;
             });
@@ -3393,6 +3404,7 @@ function Library:CreateWindow(...)
             Library:Create('UIListLayout', {
                 FillDirection = Enum.FillDirection.Vertical;
                 SortOrder = Enum.SortOrder.LayoutOrder;
+                Padding = UDim.new(0, isMobile and 4 or 6),
                 Parent = Container;
             });
 
@@ -3404,8 +3416,11 @@ function Library:CreateWindow(...)
                         Size = Size + Element.Size.Y.Offset;
                     end;
                 end;
+                
+                local padding = Groupbox.Container.UIListLayout.Padding.Offset
+                Size = Size + (Groupbox.Container.UIListLayout.AbsoluteContentSize.Y - Size)
 
-                BoxOuter.Size = UDim2.new(1, 0, 0, 20 + Size + 2 + 2);
+                BoxOuter.Size = UDim2.new(1, 0, 0, labelSize + 2 + Size + (isMobile and 4 or 8));
             end;
 
             Groupbox.Container = Container;
@@ -3471,10 +3486,12 @@ function Library:CreateWindow(...)
                 BackgroundColor3 = 'AccentColor';
             });
 
+            local headerHeight = isMobile and 16 or 18
+            
             local TabboxButtons = Library:Create('Frame', {
                 BackgroundTransparency = 1;
                 Position = UDim2.new(0, 0, 0, 1);
-                Size = UDim2.new(1, 0, 0, 18);
+                Size = UDim2.new(1, 0, 0, headerHeight);
                 ZIndex = 5;
                 Parent = BoxInner;
             });
@@ -3503,7 +3520,7 @@ function Library:CreateWindow(...)
 
                 local ButtonLabel = Library:CreateLabel({
                     Size = UDim2.new(1, 0, 1, 0);
-                    TextSize = 14;
+                    TextSize = isMobile and 12 or 14;
                     Text = Name;
                     TextXAlignment = Enum.TextXAlignment.Center;
                     ZIndex = 7;
@@ -3526,8 +3543,8 @@ function Library:CreateWindow(...)
 
                 local Container = Library:Create('Frame', {
                     BackgroundTransparency = 1;
-                    Position = UDim2.new(0, 4, 0, 20);
-                    Size = UDim2.new(1, -4, 1, -20);
+                    Position = UDim2.new(0, 4, 0, headerHeight + 2);
+                    Size = UDim2.new(1, -8, 1, -(headerHeight + 2));
                     ZIndex = 1;
                     Visible = false;
                     Parent = BoxInner;
@@ -3536,6 +3553,7 @@ function Library:CreateWindow(...)
                 Library:Create('UIListLayout', {
                     FillDirection = Enum.FillDirection.Vertical;
                     SortOrder = Enum.SortOrder.LayoutOrder;
+                    Padding = UDim.new(0, isMobile and 4 or 6),
                     Parent = Container;
                 });
 
@@ -3585,12 +3603,16 @@ function Library:CreateWindow(...)
                             Size = Size + Element.Size.Y.Offset;
                         end;
                     end;
+                    
+                    local padding = Container.UIListLayout.Padding.Offset
+                    Size = Size + (Container.UIListLayout.AbsoluteContentSize.Y - Size)
 
-                    BoxOuter.Size = UDim2.new(1, 0, 0, 20 + Size + 2 + 2);
+                    BoxOuter.Size = UDim2.new(1, 0, 0, headerHeight + 2 + Size + (isMobile and 4 or 8));
                 end;
 
                 Button.InputBegan:Connect(function(Input)
-                    if Input.UserInputType == Enum.UserInputType.MouseButton1 and not Library:MouseIsOverOpenedFrame() then
+                    if (Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch) 
+                       and not Library:MouseIsOverOpenedFrame() then
                         Tab:Show();
                         Tab:Resize();
                     end;
@@ -3714,9 +3736,9 @@ function Library:CreateWindow(...)
             end
         elseif Input.KeyCode == Enum.KeyCode.RightControl or 
                 Input.KeyCode == Enum.KeyCode.RightShift or 
-                Input.UserInputType == Enum.UserInputType.Touch and 
+                (isMobile and Input.UserInputType == Enum.UserInputType.Touch and 
                     Input.UserInputState == Enum.UserInputState.Begin and 
-                    #InputService:GetTouchesWithinRadius(Input.Position, 25) >= 2 then
+                    #InputService:GetTouchesWithinRadius(Input.Position, 25) >= 2) then
             task.spawn(Library.Toggle)
         end
     end))
@@ -3742,5 +3764,6 @@ Players.PlayerAdded:Connect(OnPlayerChange);
 Players.PlayerRemoving:Connect(OnPlayerChange);
 
 getgenv().Library = Library
+print("lib")
 
 return Library
