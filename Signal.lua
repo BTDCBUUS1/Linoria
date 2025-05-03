@@ -85,6 +85,7 @@ end
 
 --- Wait for fire to be called, and return the arguments it was given.
 -- @treturn ... Variable arguments from connection
+
 function Signal:Wait()
 	local key = self._bindableEvent.Event:Wait()
 	local args = self._argMap[key]
@@ -98,6 +99,7 @@ end
 
 --- Disconnects all connected events to the signal. Voids the signal as unusable.
 -- @treturn nil
+
 function Signal:Destroy()
 	if self._bindableEvent then
 		-- This should disconnect all events, but in-flight events should still be
